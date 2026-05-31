@@ -40,7 +40,7 @@ def check_backend() -> None:
                 raise RuntimeError(f"Unexpected status: {response.status}")
     except Exception as exc:
         print(f"Backend not reachable at {API_BASE}: {exc}", file=sys.stderr)
-        print("Start it first: cd backend && source .venv/bin/activate && python run.py")
+        print("Start it first: cd backend && uv run python run.py")
         sys.exit(1)
 
 

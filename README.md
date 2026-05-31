@@ -16,14 +16,26 @@ Restore / History APIs
 
 ## Quick Start
 
-### 1. Backend
+### 1. Backend (uv)
+
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/) if needed:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Then:
 
 ```bash
 cd backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python run.py
+uv sync
+uv run python run.py
+```
+
+From the repo root without `cd`:
+
+```bash
+uv run --project backend python run.py
 ```
 
 API docs: http://127.0.0.1:8000/docs
@@ -50,8 +62,8 @@ Load in Chrome:
 Copy your extension ID from `chrome://extensions`, then:
 
 ```bash
-export TAB_MANAGER_EXTENSION_ID="cbaipnijjondiinfdokbhfopokbgdafp"
-python scripts/capture_once.py
+export TAB_MANAGER_EXTENSION_ID=your_extension_id_here
+uv run --project backend python scripts/capture_once.py
 ```
 
 Or save it once in `.env`:
@@ -64,15 +76,15 @@ Other ways to capture once:
 
 | Method | How |
 |--------|-----|
-| **CLI** | `python scripts/capture_once.py` |
+| **CLI** | `uv run --project backend python scripts/capture_once.py` |
 | **Popup** | Click extension icon → **Capture Once** |
 | **Keyboard** | `Cmd+Shift+Y` (Mac) / `Ctrl+Shift+Y` |
-| **Extension page** | `python scripts/capture_once.py --page` |
+| **Extension page** | `uv run --project backend python scripts/capture_once.py --page` |
 
 ### 4. Verify
 
 1. Open several normal tabs (http/https)
-2. Run `python scripts/capture_once.py`
+2. Run `uv run --project backend python scripts/capture_once.py`
 3. Check `GET /sessions` or the popup status
 4. Click **Restore Latest Session** to reopen tabs
 
@@ -118,6 +130,8 @@ Other ways to capture once:
 
 ```text
 backend/
+  pyproject.toml  # uv dependencies
+  uv.lock
   app/
     main.py       # FastAPI routes
     models.py     # SQLAlchemy models
