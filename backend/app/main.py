@@ -1,5 +1,6 @@
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, selectinload
 
@@ -37,6 +38,54 @@ def on_startup() -> None:
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+CAPTURE_ONCE_HTML = """<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Capture Once</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 40px auto; max-width: 520px; padding: 0 16px; }
+    .ok { color: #166534; } .err { color: #b91c1c; }
+  </style>
+</head>
+<body>
+  <h1>Capture Once</h1>
+  <p id="status">Requesting snapshot from extension…</p>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const extId = params.get("extension_id") || localStorage.getItem("tab_manager_extension_id");
+    const status = document.getElementById("status");
+
+    if (!extId) {
+      status.textContent = "Missing extension_id query param. Run: python scripts/capture_once.py";
+      status.className = "err";
+    } else {
+      localStorage.setItem("tab_manager_extension_id", extId);
+      chrome.runtime.sendMessage(extId, { type: "SNAPSHOT_NOW" }, (response) => {
+        if (chrome.runtime.lastError) {
+          status.textContent = chrome.runtime.lastError.message;
+          status.className = "err";
+          return;
+        }
+        if (response?.ok) {
+          status.textContent = `Saved session #${response.result.session_id} (${response.result.tab_count} tabs).`;
+          status.className = "ok";
+        } else {
+          status.textContent = response?.error || "Capture failed";
+          status.className = "err";
+        }
+      });
+    }
+  </script>
+</body>
+</html>"""
+
+
+@app.get("/tools/capture-once", response_class=HTMLResponse)
+def capture_once_tool() -> HTMLResponse:
+    return HTMLResponse(CAPTURE_ONCE_HTML)
 
 
 @app.post("/snapshot", response_model=SnapshotResponse)

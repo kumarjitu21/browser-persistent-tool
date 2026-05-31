@@ -6,7 +6,7 @@ Local browser workspace persistence: automatic tab snapshots, searchable session
 
 ```text
 Chrome Extension (TypeScript)
-    ↓  POST /snapshot every 60s
+    ↓  POST /snapshot on demand (one-shot)
 Local FastAPI Service (Python)
     ↓
 SQLite (backend/data/workspace.db)
@@ -45,11 +45,35 @@ Load in Chrome:
 3. Click **Load unpacked**
 4. Select `extension/dist`
 
-### 3. Verify
+### 3. One-shot capture (no background sync)
 
-1. Open several tabs
-2. Wait 60 seconds (or click **Snapshot Now** in the popup)
-3. Check backend logs or `GET /sessions`
+Copy your extension ID from `chrome://extensions`, then:
+
+```bash
+export TAB_MANAGER_EXTENSION_ID="cbaipnijjondiinfdokbhfopokbgdafp"
+python scripts/capture_once.py
+```
+
+Or save it once in `.env`:
+
+```env
+TAB_MANAGER_EXTENSION_ID=your_extension_id_here
+```
+
+Other ways to capture once:
+
+| Method | How |
+|--------|-----|
+| **CLI** | `python scripts/capture_once.py` |
+| **Popup** | Click extension icon → **Capture Once** |
+| **Keyboard** | `Cmd+Shift+Y` (Mac) / `Ctrl+Shift+Y` |
+| **Extension page** | `python scripts/capture_once.py --page` |
+
+### 4. Verify
+
+1. Open several normal tabs (http/https)
+2. Run `python scripts/capture_once.py`
+3. Check `GET /sessions` or the popup status
 4. Click **Restore Latest Session** to reopen tabs
 
 ## API Endpoints
