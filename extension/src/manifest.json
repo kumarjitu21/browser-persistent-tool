@@ -2,9 +2,12 @@
   "manifest_version": 3,
   "name": "Workspace Memory",
   "version": "0.1.0",
-  "description": "Automatic workspace snapshots for session recovery and context switching.",
-  "permissions": ["tabs", "storage", "alarms"],
+  "description": "One-shot workspace snapshots for session recovery and context switching.",
+  "permissions": ["tabs", "storage"],
   "host_permissions": ["http://127.0.0.1:8000/*", "http://localhost:8000/*"],
+  "externally_connectable": {
+    "matches": ["http://127.0.0.1:8000/*", "http://localhost:8000/*"]
+  },
   "background": {
     "service_worker": "src/background.ts",
     "type": "module"
@@ -12,5 +15,14 @@
   "action": {
     "default_title": "Workspace Memory",
     "default_popup": "src/popup.html"
+  },
+  "commands": {
+    "capture-once": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y"
+      },
+      "description": "Capture all open tabs once"
+    }
   }
 }

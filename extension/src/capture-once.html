@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Capture Once</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 40px auto;
+        max-width: 480px;
+        padding: 0 16px;
+        color: #1a1a1a;
+      }
+      #status {
+        line-height: 1.6;
+      }
+      .ok {
+        color: #166534;
+      }
+      .err {
+        color: #b91c1c;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Capture Once</h1>
+    <p id="status">Capturing all open tabs…</p>
+    <script type="module" src="./capture-once.ts"></script>
+  </body>
+</html>

@@ -15,11 +15,15 @@
         font-size: 14px;
         margin: 0 0 12px;
       }
-      .meta {
+      .meta,
+      .hint {
         font-size: 12px;
         color: #666;
-        margin-bottom: 16px;
+        margin-bottom: 8px;
         line-height: 1.5;
+      }
+      .hint {
+        margin-bottom: 12px;
       }
       button {
         width: 100%;
@@ -49,7 +53,8 @@
   <body>
     <h1>Workspace Memory</h1>
     <div class="meta" id="meta">Loading status…</div>
-    <button class="primary" id="snapshot">Snapshot Now</button>
+    <p class="hint">Manual capture only — no background sync.</p>
+    <button class="primary" id="snapshot">Capture Once</button>
     <button id="restore">Restore Latest Session</button>
     <div id="status"></div>
     <script type="module" src="./popup.ts"></script>

@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [
     webExtension({
       manifest: "./src/manifest.json",
+      additionalInputs: ["src/capture-once.html"],
     }),
   ],
 });
